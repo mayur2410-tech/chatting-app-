@@ -1,0 +1,201 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+:root {
+  /* Overwritten at runtime by useViewportHeight so the layout tracks the on-screen keyboard. */
+  --app-height: 100dvh;
+  color-scheme: light dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-sky-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
+.app-shell {
+  height: var(--app-height);
+}
+
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-bottom {
+  padding-bottom: max(env(safe-area-inset-bottom), 0.5rem);
+}
+
+/* --- Aviation theme ------------------------------------------------------------ */
+
+/* Sign-in: daytime sky fading to the horizon; night sky in dark mode. */
+.sky-gradient {
+  background: linear-gradient(180deg, #bae6fd 0%, #e0f2fe 45%, #f8fafc 100%);
+}
+@media (prefers-color-scheme: dark) {
+  .sky-gradient {
+    background: linear-gradient(180deg, #0b1d33 0%, #081426 50%, #020617 100%);
+  }
+}
+
+/* Chat backdrop: a faint aeronautical-chart dot grid. */
+.chart-grid {
+  background-color: #eef6fc;
+  background-image: radial-gradient(rgba(2, 132, 199, 0.12) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+@media (prefers-color-scheme: dark) {
+  .chart-grid {
+    background-color: #06101e;
+    background-image: radial-gradient(rgba(125, 211, 252, 0.07) 1px, transparent 1px);
+  }
+}
+
+/* Dashed flight path used as decoration. */
+.flight-path {
+  stroke-dasharray: 2 7;
+  stroke-linecap: round;
+}
+
+/* Hidden-message mask: never the text itself. */
+.masked {
+  word-break: break-all;
+  letter-spacing: 0.05em;
+}
+
+@keyframes reveal-countdown {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+.reveal-timer {
+  transform-origin: left;
+  animation-name: reveal-countdown;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 180ms ease-out;
+}
+
+/* Brief highlight when jumping to the message a reply quotes. */
+@keyframes highlight {
+  0%,
+  60% {
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0);
+  }
+}
+
+.animate-highlight {
+  animation: highlight 1.6s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-highlight {
+    animation: none;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+/* --- Landing page & loaders ----------------------------------------------------- */
+
+/* Clouds drifting across the hero sky */
+@keyframes drift {
+  from {
+    transform: translateX(-30vw);
+  }
+  to {
+    transform: translateX(130vw);
+  }
+}
+
+.animate-drift {
+  animation: drift linear infinite;
+}
+
+/* Hero plane: gentle float as if riding air currents */
+@keyframes cruise {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(-10px, -8px) rotate(-2deg);
+  }
+}
+
+.animate-cruise {
+  animation: cruise 6s ease-in-out infinite;
+}
+
+/* Contrail dashes streaming behind the plane */
+@keyframes contrail {
+  to {
+    stroke-dashoffset: -120;
+  }
+}
+
+.animate-contrail {
+  stroke-dasharray: 18 14;
+  animation: contrail 1.4s linear infinite;
+}
+
+/* Loader: a plane orbiting a dashed flight path */
+@keyframes orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-orbit {
+  animation: orbit 1.6s linear infinite;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-drift,
+  .animate-cruise,
+  .animate-contrail {
+    animation: none;
+  }
+  .animate-orbit {
+    animation-duration: 4s;
+  }
+}

@@ -1,0 +1,27 @@
+# Render Blueprint: one Docker web service (website + API). The database is external (Aiven).
+# Values marked `sync: false` are entered in the Render dashboard — never commit them.
+services:
+  - type: web
+    name: duo-chat
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free            # free sleeps after ~15 min idle; "starter" stays awake
+    region: singapore     # pick the region closest to your Aiven database
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL         # Aiven "Service URI" (postgres://...?sslmode=require)
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_ORIGINS      # e.g. https://duo-chat.onrender.com
+        sync: false
+      - key: ALLOWED_HOSTS        # e.g. duo-chat.onrender.com
+        sync: false
+      - key: LOGIN_RATE_LIMIT_ENABLED
+        value: "true"             # keep on: the app is public now
+      - key: MIN_PASSWORD_LENGTH
+        value: "4"
+      - key: DB_POOL_SIZE         # Aiven free allows 15 connections in total
+        value: "4"
+      - key: DB_MAX_OVERFLOW
+        value: "4"

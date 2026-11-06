@@ -1,0 +1,16 @@
+# Never send secrets or local tooling into the image build.
+**/.env
+**/.env.*
+!**/.env.example
+**/node_modules
+**/.venv
+**/__pycache__
+**/.pytest_cache
+**/*.tsbuildinfo
+frontend/dist
+backend/tests
+archive
+docs
+.git
+.vscode
+.idea
